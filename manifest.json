@@ -1,6 +1,6 @@
 {
   "name": "LC Prompt",
-  "version": "1.4",
+  "version": "1.5",
   "manifest_version": 3,
   "description": "Adds a context menu to copy selected text along with custom prompts.",
   "permissions": [

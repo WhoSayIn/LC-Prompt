@@ -62,20 +62,26 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.selectionText) {
-    const item = menuItems.find((menuItem) => menuItem.id === info.menuItemId);
-    if (item) {
-      const finalText = item.template.replace("{{SELECTED_TEXT}}", info.selectionText);
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: (text) => {
-          navigator.clipboard.writeText(text).catch((err) => {
-            console.error("Failed to copy text:", err);
-          });
-        },
-        args: [finalText]
-      });
+  const selectedMenuItem = menuItems.find((menuItem) => menuItem.id === info.menuItemId);
+  if (!selectedMenuItem || !tab || !tab.id) return;
 
-    }
-  }
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: () => window.getSelection().toString()
+  }, (injectionResults) => {
+    if (!injectionResults || !injectionResults[0]) return;
+    const actualSelection = injectionResults[0].result;
+
+    const finalText = selectedMenuItem.template.replace("{{SELECTED_TEXT}}", actualSelection);
+
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: (text) => {
+        navigator.clipboard.writeText(text).catch((err) => {
+          console.error("Failed to copy text:", err);
+        });
+      },
+      args: [finalText]
+    });
+  });
 });
