@@ -1,12 +1,15 @@
 {
   "name": "LC Prompt",
-  "version": "1.5",
+  "version": "1.8",
   "manifest_version": 3,
-  "description": "Adds a context menu to copy selected text along with custom prompts.",
+  "description": "Adds a context menu to copy a Leetcode question along with custom prompts.",
   "permissions": [
     "contextMenus",
     "scripting",
     "activeTab"
+  ],
+  "host_permissions": [
+    "https://leetcode.com/*"
   ],
   "background": {
     "service_worker": "background.js"

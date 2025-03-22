@@ -56,7 +56,8 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
       id: item.id,
       title: item.title,
-      contexts: ["selection"]
+      contexts: ["all"],
+      documentUrlPatterns: ["https://leetcode.com/problems/*"]
     });
   });
 });
@@ -67,7 +68,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    func: () => window.getSelection().toString()
+    func: () => document.querySelector('[data-track-load="description_content"]').textContent
   }, (injectionResults) => {
     if (!injectionResults || !injectionResults[0]) return;
     const actualSelection = injectionResults[0].result;
