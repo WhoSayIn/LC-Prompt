@@ -68,7 +68,16 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    func: () => document.querySelector('[data-track-load="description_content"]').textContent
+    func: () => {
+      const html = document.querySelector('[data-track-load="description_content"]').innerHTML;
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      container.querySelectorAll('sup').forEach((sup) => {
+        const transformed = '^' + sup.textContent;
+        sup.replaceWith(document.createTextNode(transformed));
+      });
+      return container.textContent;
+    }
   }, (injectionResults) => {
     if (!injectionResults || !injectionResults[0]) return;
     const actualSelection = injectionResults[0].result;
