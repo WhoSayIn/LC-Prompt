@@ -18,6 +18,27 @@ My solution:
 I've already solved this correctly. Please review it for potential optimizations and improvements.`
   },
   {
+    id: "solvedCorrectlyTimeSpaceComplexity",
+    title: "Solved Correctly - Ask for Time/Space Complexity",
+    template: `
+Working on this leetcode question:
+
+# {{PROBLEM_TITLE}}
+
+\`\`\`
+{{PROBLEM_DESCRIPTION}}
+\`\`\`
+
+My solution:
+\`\`\`
+{{USER_CODE}}
+\`\`\`
+
+I've already solved this correctly. Please provide the time and space complexity analysis.
+
+Let me know if there are any optimizations or improvements that can be made.`
+  },
+  {
     id: "solvedWrong",
     title: "Solved Wrong - Ask for Mistakes & Fixes",
     template: `Working on this leetcode question:
@@ -87,7 +108,7 @@ function setupContextMenus() {
 
 function initialize() {
   loadPrompts();
-  
+
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'promptsUpdated') {
       loadPrompts();
@@ -105,7 +126,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       // Get problem title
       const titleElement = document.querySelector('.text-title-large');
       const problemTitle = titleElement ? titleElement.textContent.trim() : "";
-      
+
       // Get problem description
       const html = document.querySelector('[data-track-load="description_content"]').innerHTML;
       const container = document.createElement('div');
@@ -115,7 +136,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         sup.replaceWith(document.createTextNode(transformed));
       });
       const problemDescription = container.textContent;
-      
+
       // Get user code
       let userCode = '';
       try {
@@ -134,7 +155,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       } catch (e) {
         userCode = "// Could not retrieve your code";
       }
-      
+
       return {
         title: problemTitle,
         description: problemDescription,

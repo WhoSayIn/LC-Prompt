@@ -1,6 +1,6 @@
 {
   "name": "LC Prompt",
-  "version": "1.15",
+  "version": "1.16",
   "manifest_version": 3,
   "description": "Adds a context menu to copy a Leetcode question along with custom prompts.",
   "permissions": [
