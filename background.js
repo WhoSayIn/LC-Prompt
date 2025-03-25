@@ -1,4 +1,4 @@
-const menuItems = [
+const defaultPrompts = [
   {
     id: "solvedCorrectly",
     title: "Solved Correctly - Ask for Optimization",
@@ -63,19 +63,40 @@ I haven't solved this yet. Please provide the most optimal solution right away.`
   }
 ];
 
-chrome.runtime.onInstalled.addListener(() => {
-  menuItems.forEach((item) => {
-    chrome.contextMenus.create({
-      id: item.id,
-      title: item.title,
-      contexts: ["all"],
-      documentUrlPatterns: ["https://leetcode.com/problems/*"]
+let activePrompts = [];
+
+function loadPrompts() {
+  chrome.storage.sync.get('prompts', (data) => {
+    activePrompts = data.prompts || defaultPrompts;
+    setupContextMenus();
+  });
+}
+
+function setupContextMenus() {
+  chrome.contextMenus.removeAll(() => {
+    activePrompts.forEach((prompt) => {
+      chrome.contextMenus.create({
+        id: prompt.id,
+        title: prompt.title,
+        contexts: ["all"],
+        documentUrlPatterns: ["https://leetcode.com/problems/*"]
+      });
     });
   });
-});
+}
+
+function initialize() {
+  loadPrompts();
+  
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'promptsUpdated') {
+      loadPrompts();
+    }
+  });
+}
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  const selectedMenuItem = menuItems.find((menuItem) => menuItem.id === info.menuItemId);
+  const selectedMenuItem = activePrompts.find((prompt) => prompt.id === info.menuItemId);
   if (!selectedMenuItem || !tab || !tab.id) return;
 
   chrome.scripting.executeScript({
@@ -125,9 +146,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     const result = injectionResults[0].result;
 
     let finalText = selectedMenuItem.template
-      .replace("{{PROBLEM_TITLE}}", result.title)
-      .replace("{{PROBLEM_DESCRIPTION}}", result.description)
-      .replace("{{USER_CODE}}", result.code);
+      .replace(/{{PROBLEM_TITLE}}/g, result.title)
+      .replace(/{{PROBLEM_DESCRIPTION}}/g, result.description)
+      .replace(/{{USER_CODE}}/g, result.code);
 
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
@@ -140,3 +161,5 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     });
   });
 });
+
+initialize();

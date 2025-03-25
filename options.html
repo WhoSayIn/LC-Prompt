@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC Prompt Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #3a88fe;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .prompt-list {
+            margin-bottom: 20px;
+        }
+        .prompt-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .prompt-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        button {
+            background-color: #3a88fe;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin-left: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #2970d6;
+        }
+        button.delete {
+            background-color: #ff4d4d;
+        }
+        button.delete:hover {
+            background-color: #e60000;
+        }
+        .add-new {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .hidden {
+            display: none;
+        }
+        .edit-form {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>LC Prompt Options</h1>
+    
+    <div class="status hidden" id="status"></div>
+    
+    <div class="prompt-list" id="promptList">
+    </div>
+    
+    <div class="add-new">
+        <h2>Add New Prompt</h2>
+        <div class="edit-form">
+            <label for="newId">ID (no spaces, lowercase):</label>
+            <input type="text" id="newId" placeholder="e.g., customPrompt1">
+            
+            <label for="newTitle">Menu Title:</label>
+            <input type="text" id="newTitle" placeholder="e.g., Custom Prompt - Explain Solution">
+            
+            <label for="newTemplate">Template (use {{PROBLEM_TITLE}}, {{PROBLEM_DESCRIPTION}}, and {{USER_CODE}} as placeholders):</label>
+            <textarea id="newTemplate" placeholder="Working on this leetcode question:
+
+# {{PROBLEM_TITLE}}
+
+```
+{{PROBLEM_DESCRIPTION}}
+```
+
+My code:
+```
+{{USER_CODE}}
+```
+
+[Your custom prompt text here]"></textarea>
+            
+            <button id="addPromptBtn">Add Prompt</button>
+        </div>
+    </div>
+    
+    <div id="editPromptForm" class="edit-form hidden">
+        <h2>Edit Prompt</h2>
+        <input type="hidden" id="editId">
+        
+        <label for="editTitle">Menu Title:</label>
+        <input type="text" id="editTitle">
+        
+        <label for="editTemplate">Template:</label>
+        <textarea id="editTemplate"></textarea>
+        
+        <button id="updatePromptBtn">Update</button>
+        <button id="cancelEditBtn">Cancel</button>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>
